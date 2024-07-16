@@ -83,7 +83,7 @@ esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs
         i2c_master_write_byte(cmd,addr<<1,ACK_CHECK_EN);
         i2c_master_write(cmd,bufs->buf,bufs->len,ACK_CHECK_EN);
         data_len += bufs->len;
-        --n;                                    /*反复读写*/
+        --n;                                    /*已经执行了一次*/
         ++bufs;
     }
 
@@ -92,7 +92,7 @@ esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs
 
     for (; n--; ++bufs ) {
         if ( flags & I2C_FLAG_READ ) {
-            i2c_master_read( cmd, bufs->buf, bufs->len, n == 0 ? I2C_MASTER_LAST_NACK : I2C_MASTER_ACK )        /*读命令CMD*/
+            i2c_master_read( cmd, bufs->buf, bufs->len, n == 0 ? I2C_MASTER_LAST_NACK : I2C_MASTER_ACK );        /*读命令CMD*/
         } else{
             if ( bufs->len != 0 ){
                 i2c_master_write(cmd,bufs->buf,bufs->len,ACK_CHECK_EN);

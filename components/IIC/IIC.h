@@ -36,4 +36,7 @@ typedef struct _i2c_buf_t{
 #define I2C_MASTER_RX_BUF_DISABLE   0
 #define ACK_CHECK_EN                0x1
 
+i2c_obj_t iic_init(uint8_t iic_port);
+esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs, unsigned int  flags);
+
 #endif //WRZ_IIC_H
