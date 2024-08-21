@@ -193,5 +193,5 @@ void xl9555_init(i2c_obj_t self)
      {
          key_up = 1;
      }
- return keyval;                                                                 /*返回键值*/
+    return keyval;                                                                 /*返回键值*/
  }

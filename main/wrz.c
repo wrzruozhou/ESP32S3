@@ -4,53 +4,79 @@
 #include "LED.h"
 #include "SWPWM.h"
 #include "UART.h"
+#include "XL9555.h"
 #include "freertos/FreeRTOS.h"
 #include <freertos/task.h>
 #include <nvs_flash.h>
 #include <stdio.h>
 #include <string.h>
 
-void app_main(void)
-{
+i2c_obj_t i2c0_master;
+
+/**
+ * @brief   串口信息实验
+ * @param   无
+ * @param   无
+ * */
+void show_mesg( void ) {
+    /* 串口输出实验信息 */
+    printf( "\n" );
+    printf( "********************************" );
+    printf( "ESP32-S3\n" );
+    printf( "EXIO TEST\n" );
+    printf( "KEY0:Beep On,KEY1:Beep Off\n" );
+    printf( ":KEY2:LED On,KEY3:LED Off\n" );
+    printf( "********************************" );
+    printf( "\n" );
+}
+
+void app_main( void ) {
     esp_err_t ret;
-    uint8_t dir = 1;
-    uint16_t ledpwmval = 0;
+    uint8_t key;
 
-    ret = nvs_flash_init();     /* 初始化NVS */
+    ret = nvs_flash_init( ); /* 初始化NVS */
 
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
-    {
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        ret = nvs_flash_init();
+    if ( ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND ) {
+        ESP_ERROR_CHECK( nvs_flash_erase( ) );
+        ret = nvs_flash_init( );
     }
 
-    led_init();
-    key_init();
-    pwm_init(10,20000);
+    led_init( );
+    i2c0_master = iic_init( I2C_NUM_0 );
+    xl9555_init( i2c0_master );
+    key_init( );
+    pwm_init( 10, 20000 );
 
-    while (1)
-    {
-        if (dir == 1)
-        {
-            ledpwmval += 5; /* dir==1 ledpwmval递增 */
-        }
-        else
-        {
-            ledpwmval -= 5; /* dir==0 ledpwmval递减 */
+    while ( 1 ) {
+        key = xl9555_key_scan( 0 );
+        switch ( key ) {
+            case KEY0_PRES: {
+                printf( "KEY0 has been pressed \n" );
+                xl9555_pin_write( BEEP_IO, 0 );
+                break;
+            }
+            case KEY1_PRES: {
+                printf( "KEY1 has been pressed \n" );
+                xl9555_pin_write( BEEP_IO, 1 );
+                break;
+            }
+            case KEY2_PRES: {
+                printf( "KEY2 has been pressed \n" );
+                LED( 0 );
+                break;
+            }
+            case KEY3_PRES: {
+                printf( "KEY3 has been pressed \n" );
+                LED( 1 );
+                break;
+            }
+            default:
+                break;
         }
 
-        if (ledpwmval > 1005)
-        {
-            dir = 0;        /* ledpwmval到达1005后，方向为递减 */
+        if ( XL9555_INT == 0 ) {
+            printf( "123" );
         }
-
-        if (ledpwmval < 5)
-        {
-            dir = 1;        /* ledpwmval递减到5后，方向改为递增 */
-        }
-
-        /* 设置占空比 */
-        pwm_setduty(ledpwmval);
-        vTaskDelay(10);
+        vTaskDelay( 10 );
     }
 }
