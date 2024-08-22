@@ -54,10 +54,10 @@
 #define KEY3 xl9555_pin_read(KEY3_IO)
 
 /*按键被按下的标志*/
-#define KEY0_PRES 0                                                 /* KEY0按下 */
-#define KEY1_PRES 1                                                 /* KEY1按下 */
-#define KEY2_PRES 2                                                 /* KEY1按下 */
-#define KEY3_PRES 3                                                 /* KEY1按下 */
+#define KEY0_PRES 1                                                 /* KEY0按下 */
+#define KEY1_PRES 2                                                 /* KEY1按下 */
+#define KEY2_PRES 3                                                 /* KEY1按下 */
+#define KEY3_PRES 4                                                 /* KEY1按下 */
 
 /* 函数声明 */
 void xl9555_init(i2c_obj_t self);                                   /* 初始化XL9555 */

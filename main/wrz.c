@@ -31,6 +31,7 @@ void show_mesg( void ) {
 }
 
 void app_main( void ) {
+    printf("led off1\n");
     esp_err_t ret;
     uint8_t key;
 
@@ -45,9 +46,9 @@ void app_main( void ) {
     i2c0_master = iic_init( I2C_NUM_0 );
     xl9555_init( i2c0_master );
     key_init( );
-    pwm_init( 10, 20000 );
 
     while ( 1 ) {
+
         key = xl9555_key_scan( 0 );
         switch ( key ) {
             case KEY0_PRES: {
@@ -77,6 +78,6 @@ void app_main( void ) {
         if ( XL9555_INT == 0 ) {
             printf( "123" );
         }
-        vTaskDelay( 10 );
+        vTaskDelay(10);
     }
 }

@@ -153,7 +153,9 @@ void xl9555_init(i2c_obj_t self)
 
     /*上电先读取一次清除中断标志*/
     xl9555_read_byte(r_data, 2);
+    printf("wtf?");
     xl9555_ioconfig(0xf003);
+    printf("fuck you!");
     xl9555_pin_write(BEEP_IO,1);
     xl9555_pin_write(SPK_EN_IO,1);
 }
