@@ -10,9 +10,11 @@
 #include <nvs_flash.h>
 #include <stdio.h>
 #include <string.h>
+#include <SB_RTC.h>
 
 i2c_obj_t i2c0_master;
-
+char* weekdays[]={"Sunday","Monday","Tuesday","Wednesday",
+                     "Thursday","Friday","Saterday"};
 /**
  * @brief   串口信息实验
  * @param   无
@@ -34,6 +36,7 @@ void app_main( void ) {
     printf("led off1\n");
     esp_err_t ret;
     uint8_t key;
+    uint8_t tbuf[40];
 
     ret = nvs_flash_init( ); /* 初始化NVS */
 
@@ -47,37 +50,15 @@ void app_main( void ) {
     xl9555_init( i2c0_master );
     key_init( );
 
+
     while ( 1 ) {
-
-        key = xl9555_key_scan( 0 );
-        switch ( key ) {
-            case KEY0_PRES: {
-                printf( "KEY0 has been pressed \n" );
-                xl9555_pin_write( BEEP_IO, 0 );
-                break;
-            }
-            case KEY1_PRES: {
-                printf( "KEY1 has been pressed \n" );
-                xl9555_pin_write( BEEP_IO, 1 );
-                break;
-            }
-            case KEY2_PRES: {
-                printf( "KEY2 has been pressed \n" );
-                LED( 0 );
-                break;
-            }
-            case KEY3_PRES: {
-                printf( "KEY3 has been pressed \n" );
-                LED( 1 );
-                break;
-            }
-            default:
-                break;
-        }
-
-        if ( XL9555_INT == 0 ) {
-            printf( "123" );
-        }
-        vTaskDelay(10);
+        rtc_get_time();
+        sprintf((char *)tbuf, "Time:%02d:%02d:%02d", calendar.hour, calendar.min, calendar.sec);
+        printf("Time:%02d:%02d:%02d\r\n", calendar.hour, calendar.min, calendar.sec);
+        sprintf((char *)tbuf, "Date:%04d-%02d-%02d", calendar.year, calendar.month, calendar.date);
+        printf("Date:%02d-%02d-%02d\r\n",  calendar.year,  calendar.month,  calendar.date);
+        sprintf((char *)tbuf, "Week:%s", weekdays[calendar.week - 1]);
+        LED_TOGGLE();
+        vTaskDelay(200);
     }
 }

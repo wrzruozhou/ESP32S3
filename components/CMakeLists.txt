@@ -21,7 +21,8 @@ set(src_dirs
         GPTIMER
         SW_PWM
         XL9555
-        IIC)
+        IIC
+        RTC)
 
 set(include_dirs
         LED
@@ -31,7 +32,8 @@ set(include_dirs
         GPTIMER
         SW_PWM
         XL9555
-        IIC)
+        IIC
+        RTC)
 
 set(requires
         driver
