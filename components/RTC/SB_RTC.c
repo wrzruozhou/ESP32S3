@@ -27,6 +27,7 @@ void rtc_set_time(int year,int mon,int mday,int hour,int min,int sec)
     datetime.tm_hour = hour;
     datetime.tm_min = min;
     datetime.tm_sec = sec - 1;
+    datetime.tm_isdst = -1;
 
     /*获取1970.1.1以来的总秒数*/
     time_t  second = mktime(&datetime);
@@ -53,8 +54,8 @@ void rtc_get_time(void)
     calendar.sec = datetime->tm_sec;
 
     /*公历年月日*/
-    calendar.year = datetime->tm_year;
-    calendar.month = datetime->tm_hour + 1;
+    calendar.year = datetime->tm_year + 1900;
+    calendar.month = datetime->tm_mon + 1;
     calendar.date = datetime->tm_mday;
 
     calendar.week = rtc_get_week(calendar.year, calendar.month, calendar.date);

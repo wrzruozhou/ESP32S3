@@ -50,6 +50,8 @@ void app_main( void ) {
     xl9555_init( i2c0_master );
     key_init( );
 
+    rtc_set_time(2023,1,26,12,12,12);   /* 设置RTC时间 */
+
 
     while ( 1 ) {
         rtc_get_time();
@@ -59,6 +61,6 @@ void app_main( void ) {
         printf("Date:%02d-%02d-%02d\r\n",  calendar.year,  calendar.month,  calendar.date);
         sprintf((char *)tbuf, "Week:%s", weekdays[calendar.week - 1]);
         LED_TOGGLE();
-        vTaskDelay(200);
+        vTaskDelay(1000);
     }
 }
