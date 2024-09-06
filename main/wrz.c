@@ -45,7 +45,8 @@ void app_main( void ) {
     led_init( );
     i2c0_master = iic_init( I2C_NUM_0 );
     xl9555_init( i2c0_master );
-    key_init( );
+//    key_init( );
+    show_mesg();
 
     while ( 1 ) {
 
@@ -78,6 +79,6 @@ void app_main( void ) {
         if ( XL9555_INT == 0 ) {
             printf( "123" );
         }
-        vTaskDelay(10);
+        vTaskDelay(200);
     }
 }

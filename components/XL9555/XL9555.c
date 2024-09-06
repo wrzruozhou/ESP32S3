@@ -109,7 +109,7 @@ uint16_t xl9555_ioconfig(uint16_t config_value)
         if ( err != ESP_OK )
         {
             retry--;
-            vTaskDelay(1000);
+            vTaskDelay(100);
             ESP_LOGE("IIC","%s configure %x failed, ret: %d",__func__ , config_value, err);
             xl9555_failed = 1;
 
@@ -147,15 +147,15 @@ void xl9555_init(i2c_obj_t self)
     pGPIOConfig.mode = GPIO_MODE_INPUT;
     pGPIOConfig.intr_type = GPIO_INTR_DISABLE;
     pGPIOConfig.pull_down_en = GPIO_PULLDOWN_DISABLE;
-    pGPIOConfig.pull_up_en = GPIO_PULLUP_ENABLE;
+    pGPIOConfig.pull_up_en = (1ull << GPIO_PULLUP_ENABLE);
     pGPIOConfig.pin_bit_mask = XL9555_INT_IO;
     gpio_config(&pGPIOConfig);                      /*配置XL_INT引脚*/
 
     /*上电先读取一次清除中断标志*/
     xl9555_read_byte(r_data, 2);
-    printf("wtf?");
+
     xl9555_ioconfig(0xf003);
-    printf("fuck you!");
+
     xl9555_pin_write(BEEP_IO,1);
     xl9555_pin_write(SPK_EN_IO,1);
 }
