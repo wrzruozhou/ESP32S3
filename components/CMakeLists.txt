@@ -22,7 +22,8 @@ set(src_dirs
         SW_PWM
         XL9555
         IIC
-        24CXX)
+        24CXX
+        ADC)
 
 set(include_dirs
         LED
@@ -33,11 +34,13 @@ set(include_dirs
         SW_PWM
         XL9555
         IIC
-        24CXX)
+        24CXX
+        ADC)
 
 set(requires
         driver
-        esp_timer)
+        esp_timer
+        esp_adc)
 
 idf_component_register(SRC_DIRS ${src_dirs} INCLUDE_DIRS ${include_dirs} REQUIRES ${requires})
 

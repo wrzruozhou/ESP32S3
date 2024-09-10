@@ -1,3 +1,7 @@
+/**
+ * @brief   这个项目是根据EEPROM工程改编的
+ * */
+
 #include "ESPTIMER.h"
 #include "GPTIMER.h"
 #include "KEY.h"
@@ -6,6 +10,8 @@
 #include "UART.h"
 #include "XL9555.h"
 #include "24CXX.h"
+#include "ADCM.h"
+
 #include "freertos/FreeRTOS.h"
 #include <freertos/task.h>
 #include <nvs_flash.h>
@@ -14,82 +20,40 @@
 
 i2c_obj_t i2c0_master;
 
-const uint8_t g_text_buf[] = {"中国男足不要碧脸"};  /**要写入的字符串*/
-#define TEXT_SIZE sizeof(g_text_buf)                /**要写入字符串的长度*/
 
-/**
- * @brief   显示实验信息
- * @param   无
- * @retval  无
- * */
- void show_mesg(void )
+void app_main( void )
 {
-     /* 串口输出实验信息 */
-     printf("\n");
-     printf("********************************\n");
-     printf("ESP32\n");
-     printf("IIC EEPROM TEST\n");
-     printf("ATOM@ALIENTEK\n");
-     printf("KEY0:Write Data, KEY1:Read Data\n");
-     printf("********************************\n");
-     printf("\n");
- }
-
-void app_main( void ) {
-    uint16_t i = 0;
-    uint8_t err = 0;
-    uint8_t key;
-    uint8_t datatemp[TEXT_SIZE];
+    uint16_t adcdata;
+    float voltage;
     esp_err_t ret;
 
     ret = nvs_flash_init( ); /* 初始化NVS */
 
-    if ( ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND ) {
+    if ( ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND )
+    {
         ESP_ERROR_CHECK( nvs_flash_erase( ) );
         ret = nvs_flash_init( );
     }
 
     led_init( );
     i2c0_master = iic_init( I2C_NUM_0 );
-    xl9555_init( i2c0_master );             /**初始化IO拓展芯片*/
-    at24cxx_init(i2c0_master);              /**初始化24CXX*/
-    show_mesg();                                /**显示试验信息*/
-
-    err = at24cxx_check();                      /**检测at24c02*/
-    if ( err != 0 )
-    {
+    xl9555_init( i2c0_master );  /**初始化IO拓展芯片*/
+    at24cxx_init( i2c0_master ); /**初始化24CXX*/
+#if USE_IDF_V5
+    adc_init();
+#else
+    adc_init_v5();
+#endif
         while ( 1 )
         {
-            printf("24c02 check failed, please check!\n");
-            vTaskDelay(500);
-            LED_TOGGLE();
-        }
-    }
+#if USE_IDF_V5
+            adcdata = adc_get_result_average(ADC_ADCX_CHY, 20);
+#else
+            adcdata = adc_get_result_average_V5(ADC_CHANNEL_7, 20);
+#endif
+            voltage = (float )adcdata *(3.3 / 4095);
+            printf("the voltage is %.2f\n", voltage);
 
-    printf("24c02 Ready!\n");
-    printf("\n");
-
-    while ( 1 )
-    {
-        key = xl9555_key_scan(0);
-        switch ( key ) {
-            case KEY0_PRES:
-                at24cxx_write(0,(uint8_t *)g_text_buf,TEXT_SIZE);
-                printf("the data written is :%s\n",g_text_buf);
-                break;
-            case KEY1_PRES:
-                at24cxx_read(0,datatemp,TEXT_SIZE);
-                printf("the data read is:%s\n",datatemp);
-                break;
-            default:
-                break;
+            vTaskDelay( 1000 );
         }
-        i++;
-        if ( i == 20 )
-        {
-            LED_TOGGLE();
-            i = 0;
-        }
-        vTaskDelay(10);
-    }
 }
