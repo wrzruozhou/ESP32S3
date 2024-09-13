@@ -23,7 +23,8 @@ set(src_dirs
         XL9555
         IIC
         24CXX
-        ADC)
+        ADC
+        AP3216C)
 
 set(include_dirs
         LED
@@ -35,7 +36,8 @@ set(include_dirs
         XL9555
         IIC
         24CXX
-        ADC)
+        ADC
+        AP3216C)
 
 set(requires
         driver
