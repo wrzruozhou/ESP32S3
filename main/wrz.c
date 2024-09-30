@@ -1,5 +1,5 @@
 /**
- * @brief   这个项目是根据EEPROM工程改编的
+ * @brief   这个项目是根据4.IIC_AP3216C工程改编的
  * */
 
 #include "ESPTIMER.h"
@@ -12,6 +12,7 @@
 #include "24CXX.h"
 #include "ADCM.h"
 #include "AP3216C.h"
+#include "remote.h"
 
 #include "freertos/FreeRTOS.h"
 #include <freertos/task.h>
@@ -24,7 +25,6 @@ i2c_obj_t i2c0_master;
 
 void app_main( void )
 {
-    uint16_t ir, als, ps;
 
     uint16_t adcdata;
     esp_err_t ret;
@@ -43,19 +43,10 @@ void app_main( void )
     at24cxx_init( i2c0_master ); /**初始化24CXX*/
     ap3216c_init( i2c0_master );
     ap3216c_Int();
-
-        while ( 1 )
-        {
-            ap3216c_read_data(&ir,&ps,&als);
-            printf("ir = %u, ps = %u, als = %u\n",ir, ps, als);
-
-            /**测试用*/
-#if 0
-            if ( AP3216C_INT == 1 )
-            {
-                printf("有中断触发拉\n");
-            }
-#endif
-            vTaskDelay( 1000 );
-        }
+    remote_init();
+//        while ( 1 )
+//        {
+//            remote_init();                      /* 初始化REMOTE */
+//            vTaskDelay( 1000 );
+//        }
 }

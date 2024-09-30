@@ -24,7 +24,9 @@ set(src_dirs
         IIC
         24CXX
         ADC
-        AP3216C)
+        AP3216C
+        RENC
+        REMOTE)
 
 set(include_dirs
         LED
@@ -37,7 +39,9 @@ set(include_dirs
         IIC
         24CXX
         ADC
-        AP3216C)
+        AP3216C
+        RENC
+        REMOTE)
 
 set(requires
         driver
