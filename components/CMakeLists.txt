@@ -26,7 +26,8 @@ set(src_dirs
         ADC
         AP3216C
         RENC
-        REMOTE)
+        REMOTE
+        EMISSION)
 
 set(include_dirs
         LED
@@ -41,7 +42,8 @@ set(include_dirs
         ADC
         AP3216C
         RENC
-        REMOTE)
+        REMOTE
+        EMISSION)
 
 set(requires
         driver

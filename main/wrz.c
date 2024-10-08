@@ -1,5 +1,5 @@
 /**
- * @brief   这个项目是根据4.IIC_AP3216C工程改编的
+ * @brief   这个项目是根据5.Remote_receive工程改编的
  * */
 
 #include "ESPTIMER.h"
@@ -13,6 +13,7 @@
 #include "ADCM.h"
 #include "AP3216C.h"
 #include "remote.h"
+#include "emission.h"
 
 #include "freertos/FreeRTOS.h"
 #include <freertos/task.h>
@@ -43,7 +44,8 @@ void app_main( void )
     at24cxx_init( i2c0_master ); /**初始化24CXX*/
     ap3216c_init( i2c0_master );
     ap3216c_Int();
-    remote_init();
+//    remote_init();
+    emission_init();                    /* 初始化REMOTE */
 //        while ( 1 )
 //        {
 //            remote_init();                      /* 初始化REMOTE */
