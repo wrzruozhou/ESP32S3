@@ -12,6 +12,7 @@
 #include "24CXX.h"
 #include "ADCM.h"
 #include "AP3216C.h"
+#include "sensor.h"
 
 #include "freertos/FreeRTOS.h"
 #include <freertos/task.h>
@@ -24,9 +25,7 @@ i2c_obj_t i2c0_master;
 
 void app_main( void )
 {
-    uint16_t ir, als, ps;
-
-    uint16_t adcdata;
+    float temp;
     esp_err_t ret;
 
     ret = nvs_flash_init( ); /* 初始化NVS */
@@ -42,20 +41,12 @@ void app_main( void )
     xl9555_init( i2c0_master );  /**初始化IO拓展芯片*/
     at24cxx_init( i2c0_master ); /**初始化24CXX*/
     ap3216c_init( i2c0_master );
-    ap3216c_Int();
+    temperature_sensor_init();
 
         while ( 1 )
         {
-            ap3216c_read_data(&ir,&ps,&als);
-            printf("ir = %u, ps = %u, als = %u\n",ir, ps, als);
-
-            /**测试用*/
-#if 0
-            if ( AP3216C_INT == 1 )
-            {
-                printf("有中断触发拉\n");
-            }
-#endif
+            temp = sensor_get_temperature();
+            printf("当前的温度是%.2lf\n", temp);
             vTaskDelay( 1000 );
         }
 }
