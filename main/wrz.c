@@ -13,6 +13,7 @@
 #include "ADCM.h"
 #include "AP3216C.h"
 #include "sensor.h"
+#include "wifi_scan.h"
 
 #include "freertos/FreeRTOS.h"
 #include <freertos/task.h>
@@ -41,12 +42,12 @@ void app_main( void )
     xl9555_init( i2c0_master );  /**初始化IO拓展芯片*/
     at24cxx_init( i2c0_master ); /**初始化24CXX*/
     ap3216c_init( i2c0_master );
-    temperature_sensor_init();
+    wifi_scan();
+
 
         while ( 1 )
         {
-            temp = sensor_get_temperature();
-            printf("当前的温度是%.2lf\n", temp);
+            LED_TOGGLE();
             vTaskDelay( 1000 );
         }
 }

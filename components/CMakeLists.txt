@@ -25,7 +25,8 @@ set(src_dirs
         24CXX
         ADC
         AP3216C
-        SERNSOR)
+        SERNSOR
+        WIFI_SCAN)
 
 set(include_dirs
         LED
@@ -39,12 +40,15 @@ set(include_dirs
         24CXX
         ADC
         AP3216C
-        SERNSOR)
+        SERNSOR
+        WIFI_SCAN)
 
 set(requires
         driver
         esp_timer
-        esp_adc)
+        esp_adc
+        nvs_flash
+        esp_wifi)
 
 idf_component_register(SRC_DIRS ${src_dirs} INCLUDE_DIRS ${include_dirs} REQUIRES ${requires})
 
