@@ -26,7 +26,7 @@ set(src_dirs
         ADC
         AP3216C
         SERNSOR
-        WIFI_SCAN)
+        WIFI_USER)
 
 set(include_dirs
         LED
@@ -41,7 +41,7 @@ set(include_dirs
         ADC
         AP3216C
         SERNSOR
-        WIFI_SCAN)
+        WIFI_USER)
 
 set(requires
         driver

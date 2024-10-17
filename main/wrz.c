@@ -14,6 +14,7 @@
 #include "AP3216C.h"
 #include "sensor.h"
 #include "wifi_scan.h"
+#include "wifi_sta.h"
 
 #include "freertos/FreeRTOS.h"
 #include <freertos/task.h>
@@ -26,7 +27,6 @@ i2c_obj_t i2c0_master;
 
 void app_main( void )
 {
-    float temp;
     esp_err_t ret;
 
     ret = nvs_flash_init( ); /* 初始化NVS */
@@ -42,7 +42,8 @@ void app_main( void )
     xl9555_init( i2c0_master );  /**初始化IO拓展芯片*/
     at24cxx_init( i2c0_master ); /**初始化24CXX*/
     ap3216c_init( i2c0_master );
-    wifi_scan();
+//    wifi_scan();
+    wifi_sta_init();
 
 
         while ( 1 )
