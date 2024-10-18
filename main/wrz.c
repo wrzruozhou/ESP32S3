@@ -1,5 +1,5 @@
 /**
- * @brief   这个项目是根据EEPROM工程改编的
+ * @brief   这个项目是根据7.1WIFI_STA工程改编的
  * */
 
 #include "ESPTIMER.h"
@@ -15,6 +15,7 @@
 #include "sensor.h"
 #include "wifi_scan.h"
 #include "wifi_sta.h"
+#include "wifi_ap.h"
 
 #include "freertos/FreeRTOS.h"
 #include <freertos/task.h>
@@ -43,7 +44,8 @@ void app_main( void )
     at24cxx_init( i2c0_master ); /**初始化24CXX*/
     ap3216c_init( i2c0_master );
 //    wifi_scan();
-    wifi_sta_init();
+//    wifi_sta_init();
+    wifi_init_softap();
 
 
         while ( 1 )
