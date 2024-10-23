@@ -1,5 +1,5 @@
 /**
- * @brief   这个项目是根据7.1WIFI_STA工程改编的
+ * @brief   这个项目是根据EEPROM工程改编的
  * */
 
 #include "ESPTIMER.h"
@@ -16,6 +16,7 @@
 #include "wifi_scan.h"
 #include "wifi_sta.h"
 #include "wifi_ap.h"
+#include "RGBLCD.h"
 
 #include "freertos/FreeRTOS.h"
 #include <freertos/task.h>
@@ -28,6 +29,7 @@ i2c_obj_t i2c0_master;
 
 void app_main( void )
 {
+
     esp_err_t ret;
 
     ret = nvs_flash_init( ); /* 初始化NVS */
@@ -43,6 +45,16 @@ void app_main( void )
     xl9555_init( i2c0_master );  /**初始化IO拓展芯片*/
     at24cxx_init( i2c0_master ); /**初始化24CXX*/
     ap3216c_init( i2c0_master );
+    ap3216c_Int();
+    ltdc_init();
+    ltdc_draw_line(0, 0, 500, 100, YELLOW);
+    ltdc_draw_line(70, 89, 123, 121, RED);
+    ltdc_draw_line(100, 100, 162, 100, BLACK);
+    ltdc_draw_rectangle(100,100,600,300,GREEN);
+    ltdc_show_num(400,216, 105, 6, 32, GREEN);
+    ltdc_show_xnum(315,179,12,4,32,0x80,RED);
+    ltdc_show_string(30,70,550,150,32,"the time is 2024 - 10 - 23dsadadafafef faf aew wef wef awf daf afearasdasdawe aefaeadsadwafa", CYAN);
+
 //    wifi_scan();
 //    wifi_sta_init();
     wifi_init_softap();
@@ -50,7 +62,7 @@ void app_main( void )
 
         while ( 1 )
         {
-            LED_TOGGLE();
+
             vTaskDelay( 1000 );
         }
 }
