@@ -43,8 +43,6 @@ void app_main( void )
     xl9555_init( i2c0_master );  /**初始化IO拓展芯片*/
     at24cxx_init( i2c0_master ); /**初始化24CXX*/
     ap3216c_init( i2c0_master );
-//    wifi_scan();
-    wifi_sta_init();
 
     ltdc_init();
     ltdc_draw_line(0, 0, 500, 100, YELLOW);
@@ -54,6 +52,9 @@ void app_main( void )
     ltdc_show_num(400,216, 105, 6, 32, GREEN);
     ltdc_show_xnum(315,179,12,4,32,0x80,RED);
     ltdc_show_string(30,70,550,150,32,"the time is 2024 - 10 - 23dsadadafafef faf aew wef wef awf daf afearasdasdawe aefaeadsadwafa", CYAN);
+
+    //    wifi_scan();
+    wifi_sta_init();
         while ( 1 )
         {
             vTaskDelay( 1000 );
