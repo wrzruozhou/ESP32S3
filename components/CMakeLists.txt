@@ -26,7 +26,8 @@ set(src_dirs
         ADC
         AP3216C
         SERNSOR
-        WIFI_USER)
+        WIFI_USER
+        RGBLCD)
 
 set(include_dirs
         LED
@@ -40,6 +41,7 @@ set(include_dirs
         24CXX
         ADC
         AP3216C
+        RGBLCD
         SERNSOR
         WIFI_USER)
 
@@ -48,7 +50,8 @@ set(requires
         esp_timer
         esp_adc
         nvs_flash
-        esp_wifi)
+        esp_wifi
+        esp_lcd)
 
 idf_component_register(SRC_DIRS ${src_dirs} INCLUDE_DIRS ${include_dirs} REQUIRES ${requires})
 

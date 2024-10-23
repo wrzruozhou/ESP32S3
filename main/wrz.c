@@ -15,6 +15,7 @@
 #include "sensor.h"
 #include "wifi_scan.h"
 #include "wifi_sta.h"
+#include "RGBLCD.h"
 
 #include "freertos/FreeRTOS.h"
 #include <freertos/task.h>
@@ -45,10 +46,16 @@ void app_main( void )
 //    wifi_scan();
     wifi_sta_init();
 
-
+    ltdc_init();
+    ltdc_draw_line(0, 0, 500, 100, YELLOW);
+    ltdc_draw_line(70, 89, 123, 121, RED);
+    ltdc_draw_line(100, 100, 162, 100, BLACK);
+    ltdc_draw_rectangle(100,100,600,300,GREEN);
+    ltdc_show_num(400,216, 105, 6, 32, GREEN);
+    ltdc_show_xnum(315,179,12,4,32,0x80,RED);
+    ltdc_show_string(30,70,550,150,32,"the time is 2024 - 10 - 23dsadadafafef faf aew wef wef awf daf afearasdasdawe aefaeadsadwafa", CYAN);
         while ( 1 )
         {
-            LED_TOGGLE();
             vTaskDelay( 1000 );
         }
 }
