@@ -27,6 +27,7 @@ set(src_dirs
         AP3216C
         SERNSOR
         WIFI_SCAN)
+        RGBLCD)
 
 set(include_dirs
         LED
@@ -42,6 +43,7 @@ set(include_dirs
         AP3216C
         SERNSOR
         WIFI_SCAN)
+        RGBLCD)
 
 set(requires
         driver
@@ -49,6 +51,7 @@ set(requires
         esp_adc
         nvs_flash
         esp_wifi)
+        esp_lcd)
 
 idf_component_register(SRC_DIRS ${src_dirs} INCLUDE_DIRS ${include_dirs} REQUIRES ${requires})
 
