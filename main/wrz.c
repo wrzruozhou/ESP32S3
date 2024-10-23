@@ -12,6 +12,7 @@
 #include "24CXX.h"
 #include "ADCM.h"
 #include "AP3216C.h"
+#include "RGBLCD.h"
 
 #include "freertos/FreeRTOS.h"
 #include <freertos/task.h>
@@ -24,9 +25,6 @@ i2c_obj_t i2c0_master;
 
 void app_main( void )
 {
-    uint16_t ir, als, ps;
-
-    uint16_t adcdata;
     esp_err_t ret;
 
     ret = nvs_flash_init( ); /* 初始化NVS */
@@ -43,19 +41,18 @@ void app_main( void )
     at24cxx_init( i2c0_master ); /**初始化24CXX*/
     ap3216c_init( i2c0_master );
     ap3216c_Int();
-
+    ltdc_init();
+    ltdc_draw_line(0, 0, 500, 100, YELLOW);
+    ltdc_draw_line(70, 89, 123, 121, RED);
+    ltdc_draw_line(100, 100, 162, 100, BLACK);
+    ltdc_draw_rectangle(100,100,600,300,GREEN);
+    ltdc_show_num(400,216, 105, 6, 32, GREEN);
+    ltdc_show_xnum(315,179,12,4,32,0x80,RED);
+    ltdc_show_string(30,70,550,150,32,"the time is 2024 - 10 - 23dsadadafafef faf aew wef wef awf daf afearasdasdawe aefaeadsadwafa", CYAN);
         while ( 1 )
         {
-            ap3216c_read_data(&ir,&ps,&als);
-            printf("ir = %u, ps = %u, als = %u\n",ir, ps, als);
-
-            /**测试用*/
-#if 0
-            if ( AP3216C_INT == 1 )
-            {
-                printf("有中断触发拉\n");
-            }
-#endif
+            LED_TOGGLE();
+            printf("wocaonimade\n");
             vTaskDelay( 1000 );
         }
 }

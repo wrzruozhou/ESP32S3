@@ -24,7 +24,8 @@ set(src_dirs
         IIC
         24CXX
         ADC
-        AP3216C)
+        AP3216C
+        RGBLCD)
 
 set(include_dirs
         LED
@@ -37,12 +38,14 @@ set(include_dirs
         IIC
         24CXX
         ADC
-        AP3216C)
+        AP3216C
+        RGBLCD)
 
 set(requires
         driver
         esp_timer
-        esp_adc)
+        esp_adc
+        esp_lcd)
 
 idf_component_register(SRC_DIRS ${src_dirs} INCLUDE_DIRS ${include_dirs} REQUIRES ${requires})
 
