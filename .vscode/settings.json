@@ -2,7 +2,7 @@
     "C_Cpp.intelliSenseEngine": "Tag Parser",
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "idf.adapterTargetName": "esp32s3",
-    "idf.portWin": "COM25",
+    "idf.portWin": "COM9",
     "idf.flashType": "UART",
     "files.associations": {
         "nvs_flash.h": "c"

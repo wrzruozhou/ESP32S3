@@ -127,7 +127,7 @@ void ltdc_init(void )
     /**设置屏幕显示方向, example下并未对此做出设置*/
     ltdc_display_dir(1);                            /**横屏显示*/
     /**显示白色*/
-    ltdc_clear(WHITE);
+    ltdc_clear(RED);
     /**打开背光*/
     LCD_BL(1);
 }

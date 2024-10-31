@@ -27,6 +27,6 @@
         .threshold.authmode = WIFI_AUTH_WPA2_PSK},        \
     }
 
-void wifi_sta_init(void);
+//void wifi_sta_init(void);
 
 #endif   // WRZ_WIFI_STA_H

@@ -82,7 +82,7 @@ void wifi_event_handler(void* event_handler_arg, esp_event_base_t event_base, in
  * @param   无
  * @retval  无
  * */
-void wifi_sta_init(void)
+void wifi_sta_init_O(void)
 {
     static esp_netif_t* sta_netif = NULL;
     /**创建一个事件标志组*/
