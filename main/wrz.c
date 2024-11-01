@@ -14,6 +14,8 @@
 #include "AP3216C.h"
 #include "sensor.h"
 #include "RGBLCD.h"
+#include "wifi_sta.h"
+
 #include "UDP_CONFIG.h"
 #include "UDP_EXAMPLE.h"
 
@@ -27,7 +29,7 @@
  /* LED_TASK 任务 配置
   * 包括: 任务句柄 任务优先级 堆栈大小 创建任务
   */
-#define LED_TASK_PRIO           12         /* 任务优先级 */
+#define LED_TASK_PRIO          10        /* 任务优先级 */
 #define LED_STK_SIZE            2048        /* 任务堆栈大小 */
 TaskHandle_t LEDTask_Handler;               /* 任务句柄 */
 void led_task(void* pvParameters);          /* 任务函数 */
@@ -35,7 +37,7 @@ void led_task(void* pvParameters);          /* 任务函数 */
 /* KEY_TASK 任务 配置
  * 包括: 任务句柄 任务优先级 堆栈大小 创建任务
  */
-#define KEY_TASK_PRIO           11          /* 任务优先级 */
+#define KEY_TASK_PRIO           11         /* 任务优先级 */
 #define KEY_STK_SIZE            2048        /* 任务堆栈大小 */
 TaskHandle_t KEYTask_Handler;               /* 任务句柄 */
 void key_task(void* pvParameters);          /* 任务函数 */
@@ -57,16 +59,17 @@ void app_main(void)
         ret = nvs_flash_init();
     }
     led_init();
+    vTaskDelay(10);
     i2c0_master = iic_init(I2C_NUM_0);
-//    xl9555_init(i2c0_master);  /**初始化IO拓展芯片*/
-    //    at24cxx_init( i2c0_master ); /**初始化24CXX*/
+    vTaskDelay(10);
+    xl9555_init(i2c0_master);  /**初始化IO拓展芯片*/
+    at24cxx_init( i2c0_master ); /**初始化24CXX*/
     ltdc_init();
     ltdc_show_string(0, 0, 240, 32, 32, "ESP32-S3", RED);
     ltdc_show_string(0, 40, 240, 24, 24, "WiFi UDP Test", RED);
     ltdc_show_string(0, 70, 240, 16, 16, "ATOM@ALIENTEK", RED);
-
     wifi_sta_init();
-#if 1
+
     taskENTER_CRITICAL(&my_spinlock);
     /* key任务 */
     xTaskCreate((TaskFunction_t)key_task,
@@ -75,7 +78,6 @@ void app_main(void)
         (void*)NULL,
         (UBaseType_t)KEY_TASK_PRIO,
         (TaskHandle_t*)&KEYTask_Handler);
-
     /* LED测试任务 */
     xTaskCreate((TaskFunction_t)led_task,
         (const char*)"led_task",
@@ -84,7 +86,7 @@ void app_main(void)
         (UBaseType_t)LED_TASK_PRIO,
         (TaskHandle_t*)&LEDTask_Handler);
     taskEXIT_CRITICAL(&my_spinlock);
-#endif
+
     lwip_demo();            /* lwip测试代码 */
 
 
@@ -104,13 +106,12 @@ void key_task(void* pvParameters)
     while (1)
     {
         key = xl9555_key_scan(0);
-
         if (KEY0_PRES == key)
         {
             g_lwip_send_flag |= LWIP_SEND_DATA; /* 标记LWIP有数据要发送 */
         }
 
-        vTaskDelay(10);
+        vTaskDelay(100);
     }
 }
 
@@ -128,3 +129,4 @@ void led_task(void* pvParameters)
         vTaskDelay(500);
     }
 }
+

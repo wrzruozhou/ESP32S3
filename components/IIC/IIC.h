@@ -16,6 +16,8 @@ typedef struct _i2c_obj_t{
     esp_err_t  init_flag;
 }i2c_obj_t;
 
+extern i2c_obj_t iic_master[I2C_NUM_MAX];
+
 typedef struct _i2c_buf_t{
     size_t len;
     uint8_t *buf;

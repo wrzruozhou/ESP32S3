@@ -26,7 +26,7 @@ set(src_dirs
         ADC
         AP3216C
         SERNSOR
-#        WIFI_USER
+        WIFI_USER
         RGBLCD
         UDP)
 
@@ -43,7 +43,7 @@ set(include_dirs
         ADC
         AP3216C
         SERNSOR
-#        WIFI_USER
+        WIFI_USER
         RGBLCD
         UDP)
 
