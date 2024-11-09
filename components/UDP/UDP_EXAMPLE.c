@@ -5,7 +5,7 @@
 #include "UDP_EXAMPLE.h"
 
 /**需要自己远程设置IP地址*/
-#define IP_ADDR "192.168.2.150"
+#define IP_ADDR "192.168.2.6"
 
 #define LWIP_DEMO_RX_BUFSIZE    200    /**最大接收数据长度*/
 #define LWIP_DEMO_PORT          8080    /**连接的本地端口号*/
@@ -16,7 +16,7 @@ uint8_t g_lwip_demo_recvbuf[LWIP_DEMO_RX_BUFSIZE];
 /* 发送数据内容 */
 char g_lwip_demo_sendbuf[] = "fuck you BLG!\r\n";
 /**发送数据标志位*/
-uint8_t g_lwip_send_flag;
+//uint8_t g_lwip_send_flag;
 static struct sockaddr_in dest_addr;                    /* 远端地址 */
 struct sockaddr_in g_local_info;
 socklen_t g_sock_fd;                            /* 定义一个Socket接口 */

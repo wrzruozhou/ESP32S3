@@ -28,7 +28,8 @@ set(src_dirs
         SERNSOR
         WIFI_USER
         RGBLCD
-        UDP)
+        UDP
+        TCP_Mclient)
 
 set(include_dirs
         LED
@@ -45,7 +46,8 @@ set(include_dirs
         SERNSOR
         WIFI_USER
         RGBLCD
-        UDP)
+        UDP
+        TCP_Mclient)
 
 set(requires
         driver

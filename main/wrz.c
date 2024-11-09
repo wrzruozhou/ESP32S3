@@ -18,6 +18,7 @@
 
 #include "UDP_CONFIG.h"
 #include "UDP_EXAMPLE.h"
+#include "tcp_mclient.h"
 
 #include "freertos/FreeRTOS.h"
 #include <freertos/task.h>
@@ -72,12 +73,12 @@ void app_main(void)
 
     taskENTER_CRITICAL(&my_spinlock);
     /* key任务 */
-    xTaskCreate((TaskFunction_t)key_task,
-        (const char*)"key_task",
-        (uint16_t)KEY_STK_SIZE,
-        (void*)NULL,
-        (UBaseType_t)KEY_TASK_PRIO,
-        (TaskHandle_t*)&KEYTask_Handler);
+//    xTaskCreate((TaskFunction_t)key_task,
+//        (const char*)"key_task",
+//        (uint16_t)KEY_STK_SIZE,
+//        (void*)NULL,
+//        (UBaseType_t)KEY_TASK_PRIO,
+//        (TaskHandle_t*)&KEYTask_Handler);
     /* LED测试任务 */
     xTaskCreate((TaskFunction_t)led_task,
         (const char*)"led_task",
@@ -87,7 +88,7 @@ void app_main(void)
         (TaskHandle_t*)&LEDTask_Handler);
     taskEXIT_CRITICAL(&my_spinlock);
 
-    lwip_demo();            /* lwip测试代码 */
+    tcp_demo();
 
 
 }

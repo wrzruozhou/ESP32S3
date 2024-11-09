@@ -75,6 +75,7 @@ typedef struct
     uint16_t width;         /* LTDC宽度 */
     uint16_t height;        /* LTDC高度 */
 }_ltdc_dev;
+extern _ltdc_dev ltdcdev;
 
 void ltdc_init(void );
 void ltdc_display_dir(uint8_t dir);
