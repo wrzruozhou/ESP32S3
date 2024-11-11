@@ -29,7 +29,8 @@ set(src_dirs
         WIFI_USER
         RGBLCD
         UDP
-        TCP_Mclient)
+        TCP_Mclient
+        TCP_Mserver)
 
 set(include_dirs
         LED
@@ -47,7 +48,8 @@ set(include_dirs
         WIFI_USER
         RGBLCD
         UDP
-        TCP_Mclient)
+        TCP_Mclient
+        TCP_Mserver)
 
 set(requires
         driver

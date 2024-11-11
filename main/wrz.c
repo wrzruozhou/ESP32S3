@@ -18,7 +18,8 @@
 
 #include "UDP_CONFIG.h"
 #include "UDP_EXAMPLE.h"
-#include "tcp_mclient.h"
+//#include "tcp_mclient.h"
+#include "tcp_mserver.h"
 
 #include "freertos/FreeRTOS.h"
 #include <freertos/task.h>
@@ -73,22 +74,22 @@ void app_main(void)
 
     taskENTER_CRITICAL(&my_spinlock);
     /* key任务 */
-//    xTaskCreate((TaskFunction_t)key_task,
-//        (const char*)"key_task",
-//        (uint16_t)KEY_STK_SIZE,
-//        (void*)NULL,
-//        (UBaseType_t)KEY_TASK_PRIO,
-//        (TaskHandle_t*)&KEYTask_Handler);
-    /* LED测试任务 */
-    xTaskCreate((TaskFunction_t)led_task,
-        (const char*)"led_task",
-        (uint16_t)LED_STK_SIZE,
+    xTaskCreate((TaskFunction_t)key_task,
+        (const char*)"key_task",
+        (uint16_t)KEY_STK_SIZE,
         (void*)NULL,
-        (UBaseType_t)LED_TASK_PRIO,
-        (TaskHandle_t*)&LEDTask_Handler);
+        (UBaseType_t)KEY_TASK_PRIO,
+        (TaskHandle_t*)&KEYTask_Handler);
+    /* LED测试任务 */
+//    xTaskCreate((TaskFunction_t)led_task,
+//        (const char*)"led_task",
+//        (uint16_t)LED_STK_SIZE,
+//        (void*)NULL,
+//        (UBaseType_t)LED_TASK_PRIO,
+//        (TaskHandle_t*)&LEDTask_Handler);
     taskEXIT_CRITICAL(&my_spinlock);
 
-    tcp_demo();
+    server_demo();
 
 
 }
@@ -106,13 +107,14 @@ void key_task(void* pvParameters)
 
     while (1)
     {
-        key = xl9555_key_scan(0);
-        if (KEY0_PRES == key)
-        {
-            g_lwip_send_flag |= LWIP_SEND_DATA; /* 标记LWIP有数据要发送 */
-        }
+//        key = xl9555_key_scan(0);
+//        if (KEY0_PRES == key)
+//        {
+//            g_lwip_send_flag_server |= LWIP_SEND_DATA; /* 标记LWIP有数据要发送 */
+//        }
+    g_lwip_send_flag_server |= LWIP_SEND_DATA;
 
-        vTaskDelay(100);
+        vTaskDelay(1000);
     }
 }
 
