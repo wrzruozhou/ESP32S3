@@ -1,5 +1,5 @@
 /**
- * @brief   这个项目是根据7.2WIFI_AP工程改编的
+ * @brief   这个项目是根据8.MQTT工程改编的
  * */
 
 #include "ESPTIMER.h"
@@ -20,12 +20,14 @@
 #include "UDP_EXAMPLE.h"
 //#include "tcp_mclient.h"
 #include "tcp_mserver.h"
+#include "mqtt_test.h"
 
 #include "freertos/FreeRTOS.h"
 #include <freertos/task.h>
 #include <nvs_flash.h>
 #include <stdio.h>
 #include <string.h>
+#include "http_weather.h"
 
  /*FreeRTOS配置*/
  /* LED_TASK 任务 配置
@@ -44,6 +46,13 @@ void led_task(void* pvParameters);          /* 任务函数 */
 TaskHandle_t KEYTask_Handler;               /* 任务句柄 */
 void key_task(void* pvParameters);          /* 任务函数 */
 
+/**
+ * Weather_TASK 任务配置
+ * */
+#define Weather_TASK_PRIO           11         /* 任务优先级 */
+#define Weather_STK_SIZE            8192        /* 任务堆栈大小 */
+TaskHandle_t WeatherTask_Handler;               /* 任务句柄 */
+
 static portMUX_TYPE my_spinlock = portMUX_INITIALIZER_UNLOCKED;
 i2c_obj_t i2c0_master;
 
@@ -54,7 +63,6 @@ void app_main(void)
     esp_err_t ret;
 
     ret = nvs_flash_init(); /* 初始化NVS */
-
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
     {
         ESP_ERROR_CHECK(nvs_flash_erase());
@@ -74,12 +82,21 @@ void app_main(void)
 
     taskENTER_CRITICAL(&my_spinlock);
     /* key任务 */
-    xTaskCreate((TaskFunction_t)key_task,
-        (const char*)"key_task",
-        (uint16_t)KEY_STK_SIZE,
-        (void*)NULL,
-        (UBaseType_t)KEY_TASK_PRIO,
-        (TaskHandle_t*)&KEYTask_Handler);
+//    xTaskCreate((TaskFunction_t)key_task,
+//        (const char*)"key_task",
+//        (uint16_t)KEY_STK_SIZE,
+//        (void*)NULL,
+//        (UBaseType_t)KEY_TASK_PRIO,
+//        (TaskHandle_t*)&KEYTask_Handler);
+    if ( wifi_connect_ok_flag == 1 )
+    {
+        xTaskCreate((TaskFunction_t)http_test_task,
+                     (const char*)"http_test_task",
+                     (uint16_t)Weather_STK_SIZE,
+                     (void*)NULL,
+                     (UBaseType_t)Weather_TASK_PRIO,
+                     (TaskHandle_t*)&WeatherTask_Handler);
+    }
     /* LED测试任务 */
 //    xTaskCreate((TaskFunction_t)led_task,
 //        (const char*)"led_task",
@@ -89,7 +106,7 @@ void app_main(void)
 //        (TaskHandle_t*)&LEDTask_Handler);
     taskEXIT_CRITICAL(&my_spinlock);
 
-    server_demo();
+//    mqtt_demo();
 
 
 }
@@ -112,9 +129,10 @@ void key_task(void* pvParameters)
 //        {
 //            g_lwip_send_flag_server |= LWIP_SEND_DATA; /* 标记LWIP有数据要发送 */
 //        }
-    g_lwip_send_flag_server |= LWIP_SEND_DATA;
+//    g_publish_flag |= LWIP_SEND_DATA;
+        g_publish_flag |= 1;
 
-        vTaskDelay(1000);
+        vTaskDelay(10000);
     }
 }
 

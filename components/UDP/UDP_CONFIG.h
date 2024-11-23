@@ -23,6 +23,7 @@ typedef struct _network_connet_info_t
 } network_connet_info;
 
 extern network_connet_info network_connet;
+extern uint8_t wifi_connect_ok_flag;
 
 /* 声明函数 */
 void wifi_sta_init(void);

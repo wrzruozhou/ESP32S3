@@ -31,6 +31,7 @@ static EventGroupHandle_t   wifi_event;
 #define WIFI_FAIL_BIT       BIT1
 
 network_connet_info network_connet;
+uint8_t wifi_connect_ok_flag = 0;
 static const char* TAG = "static_ip";
 char lcd_buff[100] = { 0 };
 
@@ -171,6 +172,7 @@ void wifi_sta_init(void)
     {
         ESP_LOGI(TAG, "connected to ap SSID:%s password:%s",
                   DEFAULT_SSID, DEFAULT_PWD);
+        wifi_connect_ok_flag = 1;
     }
     else if (bits & WIFI_FAIL_BIT)
     {

@@ -30,7 +30,9 @@ set(src_dirs
         RGBLCD
         UDP
         TCP_Mclient
-        TCP_Mserver)
+        TCP_Mserver
+        MQTT_Test
+        WEATHER)
 
 set(include_dirs
         LED
@@ -49,7 +51,9 @@ set(include_dirs
         RGBLCD
         UDP
         TCP_Mclient
-        TCP_Mserver)
+        TCP_Mserver
+        MQTT_Test
+        WEATHER)
 
 set(requires
         driver
@@ -57,7 +61,10 @@ set(requires
         esp_adc
         nvs_flash
         esp_wifi
-        esp_lcd)
+        esp_lcd
+        mqtt
+        esp_http_client
+        json)
 
 idf_component_register(SRC_DIRS ${src_dirs} INCLUDE_DIRS ${include_dirs} REQUIRES ${requires})
 
