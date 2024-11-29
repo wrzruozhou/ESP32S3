@@ -115,6 +115,6 @@ void http_test_task(void *pvParameters)
             }
         }
         esp_http_client_close(client);
-        vTaskDelay(3000);
+        vTaskDelay(5000);
     }
 }
