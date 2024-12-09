@@ -28,6 +28,68 @@
 #include <stdio.h>
 #include <string.h>
 #include "http_weather.h"
+#include "gt1151.h"
+#include "touch.h"
+
+/* 6个触控点的颜色(电容触摸屏用) */
+static const uint16_t POINT_COLOR_TBL[6] = {
+        RED,
+        GREEN,
+        BLUE,
+        YELLOW,
+        MAGENTA,
+        CYAN,
+};
+
+/**
+ * @brief   电容触摸屏测试函数
+ * @param   无
+ * @retval  无
+ * */
+void ctp_test(void )
+{
+    uint8_t t = 0;
+    uint8_t i = 0;
+    uint16_t lastpos[10][2];
+
+    while ( 1 )
+    {
+        tp_dev.scan(0);
+
+        for ( i = 0; i < 5; ++i )
+        {
+            if ( tp_dev.sta & (1 << i) )
+            {
+                if ( (tp_dev.x[i] < ltdcdev.width) && (tp_dev.y[i] < 480) )
+                {
+                    if ( lastpos[i][0] == 0xffff )                                          /*上一个点的数值超出了范围*/
+                    {
+                        lastpos[i][0] = tp_dev.x[i];
+                        lastpos[i][1] = tp_dev.y[i];
+                    }
+                    lcd_draw_bline(lastpos[i][0], lastpos[i][1], tp_dev.x[i], tp_dev.y[i], 2, POINT_COLOR_TBL[i]);
+                    lastpos[i][0] = tp_dev.x[i];
+                    lastpos[i][1] = tp_dev.y[i];
+
+                    if (tp_dev.x[i] > (ltdcdev.width - 24) && tp_dev.y[i] < 20)
+                    {
+                        load_draw_dialog();                                                                         /* 清除 */
+                    }
+                }
+            }
+            else{
+                lastpos[i][0] = 0xffff;
+            }
+        }
+        vTaskDelay(5);
+        t++;
+        if (t % 20 == 0)
+        {
+            LED_TOGGLE();
+        }
+    }
+}
+
 
  /*FreeRTOS配置*/
  /* LED_TASK 任务 配置
@@ -68,19 +130,26 @@ void app_main(void)
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
-    led_init();
+
+
     vTaskDelay(10);
     i2c0_master = iic_init(I2C_NUM_0);
+
     vTaskDelay(10);
     xl9555_init(i2c0_master);  /**初始化IO拓展芯片*/
     at24cxx_init( i2c0_master ); /**初始化24CXX*/
     ltdc_init();
-    ltdc_show_string(0, 0, 240, 32, 32, "ESP32-S3", RED);
-    ltdc_show_string(0, 40, 240, 24, 24, "WiFi UDP Test", RED);
-    ltdc_show_string(0, 70, 240, 16, 16, "ATOM@ALIENTEK", RED);
-    wifi_sta_init();
+    led_init();
 
-    taskENTER_CRITICAL(&my_spinlock);
+    gt9xxx_init();
+    tp_dev.init();                      /* 初始化触摸屏 */
+    load_draw_dialog();
+    ctp_test();
+
+//    wifi_sta_init();
+
+
+//    taskENTER_CRITICAL(&my_spinlock);
     /* key任务 */
 //    xTaskCreate((TaskFunction_t)key_task,
 //        (const char*)"key_task",
@@ -88,15 +157,15 @@ void app_main(void)
 //        (void*)NULL,
 //        (UBaseType_t)KEY_TASK_PRIO,
 //        (TaskHandle_t*)&KEYTask_Handler);
-    if ( wifi_connect_ok_flag == 1 )
-    {
-        xTaskCreate((TaskFunction_t)http_test_task,
-                     (const char*)"http_test_task",
-                     (uint16_t)Weather_STK_SIZE,
-                     (void*)NULL,
-                     (UBaseType_t)Weather_TASK_PRIO,
-                     (TaskHandle_t*)&WeatherTask_Handler);
-    }
+//    if ( wifi_connect_ok_flag == 1 )
+//    {
+//        xTaskCreate((TaskFunction_t)http_test_task,
+//                     (const char*)"http_test_task",
+//                     (uint16_t)Weather_STK_SIZE,
+//                     (void*)NULL,
+//                     (UBaseType_t)Weather_TASK_PRIO,
+//                     (TaskHandle_t*)&WeatherTask_Handler);
+//    }
     /* LED测试任务 */
 //    xTaskCreate((TaskFunction_t)led_task,
 //        (const char*)"led_task",
@@ -104,9 +173,14 @@ void app_main(void)
 //        (void*)NULL,
 //        (UBaseType_t)LED_TASK_PRIO,
 //        (TaskHandle_t*)&LEDTask_Handler);
-    taskEXIT_CRITICAL(&my_spinlock);
+//    taskEXIT_CRITICAL(&my_spinlock);
 
 //    mqtt_demo();
+    while(1)
+    {
+        vTaskDelay(1000);
+        LED_TOGGLE();
+    }
 
 
 }

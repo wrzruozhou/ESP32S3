@@ -19,7 +19,7 @@
     //设置引脚的位掩码
     gpio_init_struct.pin_bit_mask = 1ull<<GPIO_NUM_1;
     gpio_config(&gpio_init_struct);
-    LED(0);
+    LED(1);
 }
 
 

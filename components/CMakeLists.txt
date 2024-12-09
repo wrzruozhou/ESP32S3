@@ -32,7 +32,8 @@ set(src_dirs
         TCP_Mclient
         TCP_Mserver
         MQTT_Test
-        WEATHER)
+        WEATHER
+        TOUCH)
 
 set(include_dirs
         LED
@@ -53,7 +54,8 @@ set(include_dirs
         TCP_Mclient
         TCP_Mserver
         MQTT_Test
-        WEATHER)
+        WEATHER
+        TOUCH)
 
 set(requires
         driver
