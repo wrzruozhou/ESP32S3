@@ -85,7 +85,7 @@ void ltdc_init(void )
     ltdcdev.vsw = 3;                    /**VSYNC Pulse Width*/
     ltdcdev.pheight = 480;               /**Vertical display area*/
     ltdcdev.pwidth = 800;               /**Horizontal display area*/
-    ltdcdev.pclk_hz = 30 * 1000 * 1000;  /**PLCK Frequency*/
+    ltdcdev.pclk_hz = 18 * 1000 * 1000;  /**PLCK Frequency*/
 
     esp_lcd_rgb_panel_config_t panel_config = {
         .data_width = 16,                           /**RGB565 in parallel mode, thus 16bit in width*/
