@@ -1,7 +1,6 @@
 /**
  * @brief   这个项目是根据8.MQTT工程改编的
  * */
-
 #include "ESPTIMER.h"
 #include "GPTIMER.h"
 #include "KEY.h"
@@ -30,6 +29,7 @@
 #include "http_weather.h"
 #include "gt1151.h"
 #include "touch.h"
+#include "lvgl_demo.h"
 
 /* 6个触控点的颜色(电容触摸屏用) */
 static const uint16_t POINT_COLOR_TBL[6] = {
@@ -137,15 +137,15 @@ void app_main(void)
 
     vTaskDelay(10);
     xl9555_init(i2c0_master);  /**初始化IO拓展芯片*/
-    at24cxx_init( i2c0_master ); /**初始化24CXX*/
-    ltdc_init();
+//    at24cxx_init( i2c0_master ); /**初始化24CXX*/
+//    ltdc_init();
     led_init();
-
-    gt9xxx_init();
-    tp_dev.init();                      /* 初始化触摸屏 */
-    load_draw_dialog();
-    ctp_test();
-
+//
+//    gt9xxx_init();
+    lvgl_demo();
+//    tp_dev.init();                      /* 初始化触摸屏 */
+//    load_draw_dialog();
+//    ctp_test();
 //    wifi_sta_init();
 
 

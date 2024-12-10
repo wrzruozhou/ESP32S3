@@ -1,2 +1,6 @@
-idf_component_register(SRCS "wrz.c"
-                    INCLUDE_DIRS ".")
+idf_component_register(SRC_DIRS
+        "."
+        "APP"
+        INCLUDE_DIRS
+        "."
+        "APP")
