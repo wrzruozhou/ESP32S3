@@ -3,60 +3,70 @@
 //
 
 #include "lvgl_mytest.h"
+#include "XL9555.h"
 
-#include <KEY.h>
-#include <LED.h>
-#include <XL9555.h>
-#include <stdio.h>
-#include <freertos/task.h>
+lv_obj_t *scr;
+lv_obj_t *obj1 = NULL;
+lv_obj_t *obj2 = NULL;
+lv_obj_t *obj3 = NULL;
+lv_style_t red_style;
 
-USER_DATA userData = {
-    .name = "feiyangqingyun",
-    .age = 20
-};
-
-lv_timer_t *timer = NULL;
-/*任务回调函数*/
-void task1_cb(struct _lv_timer_t * task)
+//例程入口函数
+void lv_obj_test_start(void)
 {
-    /*获取用户的自定义参数*/
-    USER_DATA *dat = (USER_DATA*)task->user_data;
-    printf("task1_cb name:%s age:%d\n",dat->name,dat->age);
+    scr = lv_scr_act(); /*获取当前活跃的屏幕对象*/
 
-    /*灯删错提示*/
-    LED(1);
-    vTaskDelay(1000);
-    LED(0);
-    vTaskDelay( 1000 );
+    //创建一个基本对象
+    obj1 = lv_obj_create( scr );
+    /*设置坐标位置*/
+    lv_obj_set_pos( obj1, 400, 20 );     /*设置坐标位置*/
+    lv_obj_set_size( obj1, 350, 200 );  /*设置大小*/
+
+    //创建一个基本对象2,与对象1进行外部底下居中对齐,同时y轴向上偏移10个像素,
+    //目的是为了让obj2有一部分压在obj1上,方便后面演示z轴层级改变的API接口
+    obj2 = lv_obj_create( scr );
+    lv_obj_set_size( obj2, 200, 200 );
+    lv_obj_set_style_bg_color(obj2, lv_color_hex( 0x336699 ),0);
+    lv_obj_align_to( obj2, obj1,LV_ALIGN_OUT_BOTTOM_MID, 0, 50 );
 }
 
-void task_test_start(void )
-{
-    timer = lv_timer_create(task1_cb, 5000, &userData);
-}
-
-/*按键处理函数*/
-void key_handled(void)
+//案件处理
+void key_handler(void)
 {
     uint8_t key = xl9555_key_scan( 0 );
-    if (timer == NULL)
-    {
-        return;
-    }
     if (key == KEY0_PRES)
     {
-        /*使任务复位*/
-        lv_timer_reset( timer );
-        printf( "0task_reset_tick%ld\r\n", lv_tick_get(  ) );
+        //Z轴层级改变延时,
+#define Z_LAYER_MODE    1//1,2,3分别对应3种实现方式
+        #if (Z_LAYER_MODE == 1)
+            if (obj1)
+                lv_obj_move_foreground( obj1 );
+#elif (Z_LAYER_MODE == 2)
+        lv_obj_move_background( obj2 );
+#endif
+        printf( "obj1 is on top layer!\r\n" );
     }else if (key == KEY1_PRES)
     {
-        /*使得任务立刻准备就绪*/
-        lv_timer_ready( timer );
-        printf( "1task_reset_tick%ld\r\n", lv_tick_get(  ) );
+        //动态创建一个对象3,与屏幕居中对齐,然后更改对象2的父亲为对象3
+        obj3 = lv_obj_create( obj1 );
+        lv_obj_align_to( obj3,NULL,LV_ALIGN_CENTER,0,0 );
+        lv_obj_set_parent( obj2, obj3 );
+        lv_obj_set_pos( obj2, 10, 10 );
     }else if (key == KEY2_PRES)
     {
-        lv_timer_del( timer );
-        timer = NULL;
-        printf("2task_del_tick:%ld\r\n",lv_tick_get());
+        if (obj1)
+        {
+            //删除obj1对象,有两种实现方式
+#define DEL_MODE 1
+#if (DEL_MODE == 1)
+            lv_obj_del( obj1 );
+#elif (DEL_MODE == 2)
+            lv_obj_del_async( obj1 );
+#endif
+            obj1 = NULL;
+            printf( "obj1 is deleted\r\n" );
+        }
     }
 }
+
+

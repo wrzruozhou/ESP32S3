@@ -7,12 +7,7 @@
 
 #include "lvgl.h"
 
-typedef struct {
-    char name[32];
-    int age;
-}USER_DATA;
-
-void task_test_start(void );
-void key_handled(void);
+void lv_obj_test_start(void);
+void key_handler(void);
 
 #endif //LVGL_MYTEST_H

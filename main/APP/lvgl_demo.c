@@ -46,12 +46,12 @@ void lvgl_demo(void)
     setup_ui(&guider_ui);
     events_init(&guider_ui);
 #endif
-task_test_start(  );
+lv_obj_test_start(  );
     while (1)
     {
         lv_timer_handler();             /* LVGL计时器 */
         vTaskDelay(pdMS_TO_TICKS(10));  /* 延时10毫秒 */
-        key_handled(  );
+        key_handler(  );
     }
 }
 
