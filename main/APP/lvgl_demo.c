@@ -8,15 +8,7 @@
 
 
 #include "touch.h"
-#include "gui_guider.h"
-#include "events_init.h"
 #include "LED.h"
-
-#include "lvgl_mytest.h"
-/*GUI Guider要求定义的*/
-lv_ui guider_ui;
-
-
 /**
  * @brief       lvgl_demo入口函数
  * @param       无
@@ -40,7 +32,7 @@ void lvgl_demo(void)
     /* 官方demo,需要在SDK Configuration中开启对应Demo */
 //    lv_demo_music();                                                              /*空间远远不够*/
 //     lv_demo_benchmark();
-//     lv_demo_widgets();
+     lv_demo_widgets();
 //     lv_demo_stress();
 //     lv_demo_keypad_encoder();
 /*这个是gui guide生产的代码*/
