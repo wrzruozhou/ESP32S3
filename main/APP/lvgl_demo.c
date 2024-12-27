@@ -8,6 +8,7 @@
 
 #include "gui_guider.h"
 #include "events_init.h"
+#include "lvgl_mytest.h"
 
 #include "touch.h"
 #include "LED.h"
@@ -41,15 +42,16 @@ void lvgl_demo(void)
 //     lv_demo_keypad_encoder();
 /*这个是gui guide生产的代码*/
 
-#if 1
+#if 0
     setup_ui(&guider_ui);
     events_init(&guider_ui);
 #endif
-
+task_test_start(  );
     while (1)
     {
         lv_timer_handler();             /* LVGL计时器 */
         vTaskDelay(pdMS_TO_TICKS(10));  /* 延时10毫秒 */
+        key_handled(  );
     }
 }
 
