@@ -1,6 +1,13 @@
 idf_component_register(SRC_DIRS
         "."
         "APP"
+        "GUI_GUIDE/custom"
+        "GUI_GUIDE/generated/guider_fonts"
+        "GUI_GUIDE/generated"
         INCLUDE_DIRS
         "."
-        "APP")
+        "APP"
+        "GUI_GUIDE/custom"
+        "GUI_GUIDE/generated/guider_customer_fonts"
+        "GUI_GUIDE/generated/guider_fonts"
+        "GUI_GUIDE/generated")
