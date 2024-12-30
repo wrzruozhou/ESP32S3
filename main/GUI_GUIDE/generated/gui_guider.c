@@ -22,7 +22,6 @@ void ui_init_style(lv_style_t * style)
 
 void init_scr_del_flag(lv_ui *ui)
 {
-  
 	ui->screen_del = true;
 }
 

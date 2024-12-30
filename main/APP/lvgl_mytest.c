@@ -5,67 +5,94 @@
 #include "lvgl_mytest.h"
 #include "XL9555.h"
 
+
 lv_obj_t *scr;
 lv_obj_t *obj1 = NULL;
 lv_obj_t *obj2 = NULL;
 lv_obj_t *obj3 = NULL;
-lv_style_t red_style;
+
+lv_style_t img_style;
+lv_style_t img_style2;
+//图片声明
+LV_IMG_DECLARE( True_color )
+LV_IMG_DECLARE( True_color_with_alpha )
+LV_IMG_DECLARE( True_color_chroma_keyed )
 
 //例程入口函数
-void lv_obj_test_start(void)
+void lv_img_test_start()
 {
-    scr = lv_scr_act(); /*获取当前活跃的屏幕对象*/
+    lv_opa_t  img_opa = LV_OPA_COVER;
+    lv_obj_t *scr = lv_scr_act();   /*获取当前活跃的屏幕对象*/
+    lv_style_init(&img_style);
+    lv_style_set_bg_color(&img_style, lv_color_hex(0x590042));
+    lv_style_set_text_color(&img_style, lv_color_hex(0xaccb3));
+    lv_style_set_img_opa(&img_style,img_opa);
 
-    //创建一个基本对象
-    obj1 = lv_obj_create( scr );
-    /*设置坐标位置*/
-    lv_obj_set_pos( obj1, 400, 20 );     /*设置坐标位置*/
-    lv_obj_set_size( obj1, 350, 200 );  /*设置大小*/
+    lv_style_init(&img_style);
+    lv_style_set_img_opa(&img_style2,LV_OPA_50);
+    lv_style_set_img_recolor(&img_style2, lv_color_hex(0xff0000));
 
-    //创建一个基本对象2,与对象1进行外部底下居中对齐,同时y轴向上偏移10个像素,
-    //目的是为了让obj2有一部分压在obj1上,方便后面演示z轴层级改变的API接口
-    obj2 = lv_obj_create( scr );
-    lv_obj_set_size( obj2, 200, 200 );
-    lv_obj_set_style_bg_color(obj2, lv_color_hex( 0x336699 ),0);
-    lv_obj_align_to( obj2, obj1,LV_ALIGN_OUT_BOTTOM_MID, 0, 50 );
+    //创建图片样式
+
+    //创建显示图标字体和文本的图片对象
+    lv_obj_t *img1 = lv_img_create( scr );
+    lv_img_set_src( img1,LV_SYMBOL_DUMMY"Icon font: "LV_SYMBOL_AUDIO" audio" );//以文本开头，前面必须加LV_SYMBOL_DUMMY
+    lv_obj_add_style(img1,&img_style,0);
+    lv_obj_align( img1, LV_ALIGN_TOP_MID, 50, 50 );
+    // lv_obj_align_to( img1, scr, LV_ALIGN_TOP_MID, 50, 50 );
+
+    //设置显示True color格式的图片对象
+    lv_obj_t *img2 = lv_img_create( scr );
+    lv_img_set_src( img2, &True_color );
+    lv_obj_add_style(img2,&img_style,0);
+    lv_obj_add_style(img2,&img_style2,0);
+    lv_obj_align_to( img2,img1,LV_ALIGN_OUT_BOTTOM_MID,0,10 );
+
+    //创建显示Ture color with alpha格式的图片对象
+    lv_obj_t *img3 = lv_img_create( scr );
+    lv_img_set_src( img3, &True_color_with_alpha );
+    lv_obj_add_style(img2,&img_style,0);
+    lv_obj_align_to( img3, img2, LV_ALIGN_OUT_BOTTOM_MID,0,10 );
+
+    //创建显示True color chroma keyed格式的图片对象
+    lv_obj_t *img4 = lv_img_create( scr );
+    lv_img_set_src( img4, &True_color_chroma_keyed );
+    lv_img_set_angle(img4 ,90 );
+    lv_obj_set_size( img4, 150, 50 );
+    lv_obj_align_to( img4,img3,LV_ALIGN_OUT_BOTTOM_MID, 0, 10 );
+
+    lv_anim_t a;
+    lv_anim_init(&a);
+    lv_anim_set_var(&a, img2);
+    lv_anim_set_values(&a,90,180);
+    lv_anim_set_time(&a,1000);
+    lv_anim_set_repeat_count(&a, LV_ANIM_REPEAT_INFINITE);
+    lv_anim_set_playback_time(&a, 500);
+    lv_anim_set_playback_delay(&a, 0);
+    lv_anim_set_path_cb(&a, lv_anim_path_linear);
+    lv_anim_set_exec_cb(&a, (lv_anim_exec_xcb_t)lv_img_set_angle);
+    lv_anim_start(&a);
+
+    lv_anim_t a2;
+    a2 = a;
+    lv_anim_set_var(&a2, img3);
+    lv_anim_start(&a2);
 }
 
 //案件处理
 void key_handler(void)
 {
-    uint8_t key = xl9555_key_scan( 0 );
+    static lv_opa_t fpx = LV_OPA_COVER;
+    uint8_t key = 0;
+    key = xl9555_key_scan(0);
     if (key == KEY0_PRES)
     {
-        //Z轴层级改变延时,
-#define Z_LAYER_MODE    1//1,2,3分别对应3种实现方式
-        #if (Z_LAYER_MODE == 1)
-            if (obj1)
-                lv_obj_move_foreground( obj1 );
-#elif (Z_LAYER_MODE == 2)
-        lv_obj_move_background( obj2 );
-#endif
-        printf( "obj1 is on top layer!\r\n" );
-    }else if (key == KEY1_PRES)
-    {
-        //动态创建一个对象3,与屏幕居中对齐,然后更改对象2的父亲为对象3
-        obj3 = lv_obj_create( obj1 );
-        lv_obj_align_to( obj3,NULL,LV_ALIGN_CENTER,0,0 );
-        lv_obj_set_parent( obj2, obj3 );
-        lv_obj_set_pos( obj2, 10, 10 );
-    }else if (key == KEY2_PRES)
-    {
-        if (obj1)
-        {
-            //删除obj1对象,有两种实现方式
-#define DEL_MODE 1
-#if (DEL_MODE == 1)
-            lv_obj_del( obj1 );
-#elif (DEL_MODE == 2)
-            lv_obj_del_async( obj1 );
-#endif
-            obj1 = NULL;
-            printf( "obj1 is deleted\r\n" );
-        }
+        fpx -= 10;
+        if ( fpx <= 10)
+            fpx = LV_OPA_COVER;
+        printf("the fpx value is %d\n", fpx);
+        lv_style_set_img_opa(&img_style, fpx);
+        lv_obj_report_style_change(&img_style);         //刷新使用了此样式的对象
     }
 }
 

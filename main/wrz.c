@@ -31,6 +31,8 @@
 #include "touch.h"
 #include "lvgl_demo.h"
 
+#include <lvgl_mytest.h>
+
 /* 6个触控点的颜色(电容触摸屏用) */
 static const uint16_t POINT_COLOR_TBL[6] = {
         RED,
