@@ -7,7 +7,7 @@
 
 #include "lvgl.h"
 
-void lv_img_test_start();
+void lv_line_test_start();
 void key_handler(void);
 
 #endif //LVGL_MYTEST_H

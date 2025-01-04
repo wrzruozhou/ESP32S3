@@ -41,7 +41,7 @@ void lvgl_demo(void)
 //     lv_demo_stress();
 //     lv_demo_keypad_encoder();
 /*这个是gui guide生产的代码*/
-    lv_img_test_start(  );
+    lv_line_test_start();
 #if 0
     setup_ui(&guider_ui);
     events_init(&guider_ui);
